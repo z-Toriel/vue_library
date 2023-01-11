@@ -98,7 +98,7 @@
       <button @click="register">确认注册</button>
 
       <button style="background-color: red; margin-top: 2vw">
-        <router-link to="/login" style="color: #fff">返回登录页</router-link>
+        <router-link to="/" style="color: #fff">返回登录页</router-link>
       </button>
     </div>
 
@@ -127,7 +127,7 @@ export default {
       isPhone: false, //判断重复手机
 
       checkCode: "", // 用于存放服务端传过来的验证码
-      userCheckCode: "",  // 用于保存用户输入的验证码
+      userCheckCode: "", // 用于保存用户输入的验证码
       isCheckCode: false,
     };
   },
@@ -135,22 +135,35 @@ export default {
     //验证手机号是否重复
     checkUserId() {
       //路径 /fans/check/手机号
-      this.$axios.get("/fans/check/" + this.fans.id).then((response) => {
-        if (response.data.code == 20005) {
-          this.isPhone = true;
-          this.$message({
-            showClose: true,
-            message: response.data.message,
-            type: "warning",
-            onClose: () => {
-              this.fans.id = "";
-              return;
-            },
-          });
-        } else {
-          this.isPhone = false;
-        }
-      });
+      let reg = /^[1][3,4,5,7,8][0-9]{9}$/;
+      if (reg.test(this.fans.id)) {
+        this.$axios.get("/fans/check/" + this.fans.id).then((response) => {
+          if (response.data.code == 20005) {
+            this.isPhone = true;
+            this.$message({
+              showClose: true,
+              message: response.data.message,
+              type: "warning",
+              onClose: () => {
+                this.fans.id = "";
+                return;
+              },
+            });
+          } else {
+            this.isPhone = false;
+          }
+        });
+      } else {
+        this.$message({
+          showClose: true,
+          message: "请输入正确的手机号",
+          type: "warning",
+          onClose: () => {
+            this.fans.id = "";
+            return;
+          },
+        });
+      }
     },
 
     // 判断两次密码是否相等
@@ -175,21 +188,32 @@ export default {
               message: "验证码发送成功",
               type: "success",
             });
+          } else {
+            this.$message({
+              showClose: true,
+              message: response.data.message,
+              type: "warning",
+            });
           }
         });
     },
 
     // 判断用户输入的验证码是否正确
     judgeCheckCode() {
-      if(this.checkCode == this.userCheckCode){
-        this.isCheckCode = false
-      }else{
-        this.isCheckCode = true
+      if (this.checkCode == this.userCheckCode) {
+        this.isCheckCode = false;
+      } else {
+        this.isCheckCode = true;
       }
     },
 
     register() {
-      if (this.isconfirmPassword == false && this.isPhone == false && this.isCheckCode==false) {
+      if (
+        this.isconfirmPassword == false &&
+        this.isPhone == false &&
+        this.isCheckCode == false &&
+        this.userCheckCode != ""
+      ) {
         this.$axios.post("/fans/register", this.fans).then((response) => {
           if (response.data.code == 1) {
             this.$message({
@@ -197,7 +221,7 @@ export default {
               message: response.data.message,
               type: "success",
               onClose: () => {
-                this.$router.push("/login");
+                this.$router.push("/");
               },
             });
           } else {

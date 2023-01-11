@@ -20,6 +20,27 @@
           </div>
         </li>
         <li>
+          <div class="title">邮箱：</div>
+          <div class="content">
+            <input type="email" v-model="fans.email" placeholder="输入邮箱" disabled style="color:rgb(164, 164, 164)"/>
+          </div>
+          <button @click="getCheckCode()">获取验证码</button>
+        </li>
+        <li>
+          <div class="title">验证码：</div>
+          <div class="content">
+            <input
+              type="text"
+              v-model="userCheckCode"
+              @blur="judgeCheckCode()"
+              placeholder="输入验证码"
+            />
+          </div>
+          <div class="repass" v-if="isCheckCode">
+            <span>验证码错误</span>
+          </div>
+        </li>
+        <li>
           <div class="title">新密码：</div>
           <div class="content">
             <input
@@ -65,12 +86,17 @@ export default {
       //定义JSON用户对象user，注册请求直接发送至 服务器端
       fans: {
         id: this.$getSessionStorage("fans").id,
+        email: this.$getSessionStorage("fans").email,
         password: "",
       },
       oldPassword: "",
       confirmPassword: "", //确认密码无需录入数据库，不需要传递给服务器端，独立定义一个变量
-      isconfirmPassword: false, //判断重复密码
+      isconfirmPassword: "", //判断重复密码
       isoldPassword: false,
+
+      checkCode: "", // 用于存放服务端传过来的验证码
+      userCheckCode: "",  // 用于保存用户输入的验证码
+      isCheckCode: false,
     };
   },
   methods: {
@@ -94,10 +120,10 @@ export default {
             this.isoldPassword = true;
             this.$message({
               showClose: true,
-              message: "密码错误",
+              message: "旧密码错误",
               type: "warning",
               onClose: () => {
-                this.fans.id = "";
+                this.oldPassword = "";
                 return;
               },
             });
@@ -107,14 +133,44 @@ export default {
         });
     },
 
+     // 获取验证码
+    getCheckCode() {
+      this.$axios
+        .get("/fans/getCheckCode/" + this.fans.email)
+        .then((response) => {
+          if (response.data.code == 1) {
+            console.log(response);
+            this.checkCode = response.data.data.checkCode;
+            this.$message({
+              showClose: true,
+              message: "验证码发送成功",
+              type: "success",
+            });
+          }
+        });
+    },
+
+    // 判断用户输入的验证码是否正确
+    judgeCheckCode() {
+      if(this.checkCode == this.userCheckCode){
+        this.isCheckCode = false
+      }else{
+        this.isCheckCode = true
+      }
+    },
+
     repassword() {
-      if (this.isconfirmPassword == false && this.isoldPassword == false) {
+      if (this.isconfirmPassword == false && this.isoldPassword == false && this.isCheckCode==false && this.userCheckCode!="") {
         this.$axios.post("/fans/repass", this.fans).then((response) => {
           if (response.data.code == 1) {
             this.$message({
               showClose: true,
-              message: "修改密码成功",
+              message: "修改密码成功，请重新登录",
               type: "success",
+              onClose: () => {
+                this.$router.push("/");
+                this.$removeSessionStorage("fans")
+              },
             });
           } else {
             this.$message({

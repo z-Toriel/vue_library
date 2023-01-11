@@ -46,7 +46,8 @@ export default {
       this.$router.push("/orderList");
     },
     toUserCenter() {
-      console.log("跳转个人中心");
+      this.$router.push("/userCenter")
+      // console.log("跳转个人中心");
     },
   },
 };

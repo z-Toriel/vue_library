@@ -34,7 +34,7 @@
     </div>
 
     <!-- 底部菜单部分 -->
-    <Footer></Footer>
+    <!-- <Footer></Footer> -->
   </div>
 </template>
 
@@ -86,7 +86,7 @@
             //当前登录用户状态记录
             this.$setSessionStorage('token', fans.token)
             this.$setSessionStorage('fans', fans)
-            this.$router.back()
+            this.$router.push("/index")
           }
         })
       },

@@ -28,11 +28,10 @@
           <div class="serve-item">
             <i class="el-icon-s-order"></i>
             <span>我的订单</span>
-
           </div>
         </div>
       </router-link>
-  
+
       <router-link to="/love">
         <div class="serve">
           <div class="serve-item">
@@ -41,7 +40,7 @@
           </div>
         </div>
       </router-link>
-  
+
       <router-link to="/rePassword">
         <div class="serve">
           <div class="serve-item">
@@ -51,14 +50,12 @@
         </div>
       </router-link>
 
-      <router-link to="/login">
-        <div class="serve">
-          <div class="serve-item">
-            <i class="el-icon-s-custom"></i>
-            <span>退出登录</span>
-          </div>
+      <div class="serve" @click="logout">
+        <div class="serve-item">
+          <i class="el-icon-s-custom"></i>
+          <span>退出登录</span>
         </div>
-      </router-link>
+      </div>
     </div>
     <Footer></Footer>
   </div>
@@ -70,21 +67,20 @@ export default {
   data() {
     return {
       fans: this.$getSessionStorage("fans"),
-      ordersNum:0,  //用于存放订单数量
-      loveNum:0, // 想看的数量
-      evaluateNum:0,
+      ordersNum: 0, //用于存放订单数量
+      loveNum: 0, // 想看的数量
+      evaluateNum: 0,
     };
   },
-  created(){
+  created() {
     // this.getNum()
   },
-  methods:{
+  methods: {
     // getNum(){
     //   this.$axios.get("/orders/num/"+this.fans.id).then((response)=>{
     //     this.ordersNum = response.data.data.ordernum
     //     console.log(response.data)
     //   })
-
     //   this.$axios.get("/love/num/"+this.fans.id).then((response)=>{
     //     this.loveNum = response.data.data.lovenum
     //     console.log(response.data)
@@ -93,6 +89,12 @@ export default {
     //     this.evaluateNum = response.data.data.evaluatenum
     //   })
     // }
+    logout(){
+      this.$router.push("/")
+      this.$removeSessionStorage('fans')
+      this.$removeSessionStorage('token')
+      
+    }
   },
 
   components: {
@@ -102,8 +104,8 @@ export default {
 </script>
 
 <style scoped>
-.wrapper{
-  background-color: ghostwhite;;
+.wrapper {
+  background-color: ghostwhite;
 }
 h2 {
   padding: 0;
@@ -140,7 +142,7 @@ h2 {
   /* justify-content: space-between; */
   height: 15vw;
   border-bottom: 1px solid rgb(238, 238, 238);
-  
+
   margin-bottom: 3vw;
 }
 .serve i {
@@ -200,7 +202,7 @@ h2 {
   font-size: 4vw;
 }
 
-.jump{
+.jump {
   background-color: #fff;
   width: 360px;
   border-radius: 15px;
