@@ -7,6 +7,7 @@ import Arrangement from '@/views/Arrangement.vue'
 import Seat from '@/views/Seat.vue'
 import UserCenter from '@/views/UserCenter.vue'
 import RePassword from '@/views/RePassword.vue'
+import Details from '@/views/details.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
     name: 'RePassword',
     path: '/rePassword',
     component: RePassword
+  },
+  {
+    name: 'Details',
+    path: '/details',
+    component: Details
   }
 ]
 

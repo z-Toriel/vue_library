@@ -21,12 +21,7 @@
       <div class="search-fixed-top" ref="fixedBox">
         <!-- 搜索框部分中间的白框 -->
         <div class="search-box">
-          <el-input
-            placeholder="搜索电影名"
-            prefix-icon="el-icon-search"
-            v-model="filmName"
-            @input="searchFilm"
-          >
+          <el-input placeholder="搜索电影名" prefix-icon="el-icon-search" v-model="bookName" @input="searchBook">
           </el-input>
         </div>
       </div>
@@ -96,16 +91,12 @@
     </ul>
 
     <ul class="movie">
-      <li
-        @click="toArrangement(film.id)"
-        v-for="(film,index) in filmArray"
-        :key="index"
-      >
-        <img :src="film.cover" />
+      <li @click="toDetails(book.id)" v-for="(book, index) in bookArray" :key="index">
+        <img :src="book.cover" />
         <div class="movie-info">
-          <h3>{{ film.name }}</h3>
+          <h3>{{ book.name }}</h3>
           <div class="movie-info-node">
-            <p><i class="el-icon-star-on"></i>{{ film.grade }}</p>
+            <p><i class="el-icon-star-on"></i>{{ book.grade }}</p>
             <button>购票</button>
           </div>
         </div>
@@ -130,21 +121,23 @@ export default {
       fit: "cover",
       //定义一个分类信息的数组，存储所有的分类信息
       categoryList: [],
+
       type: 0, //存储电影的显示类别，默认0显示全部电影
 
       current: 1, //当前页码，默认第1页
       size: 6,
       pages: 0, //总共多少页
 
-      filmName: "", //搜索的电影名，对应首页上搜索栏
+      bookName: "", //搜索的电影名，对应首页上搜索栏
       //存储首页电影数据数组
-      filmArray: [],
+      bookArray: [],
       typeCss: ["active", "", ""],
     };
   },
   created() {
     this.fans = this.$getSessionStorage("fans");
-    this.getFilmList(); //加载首页的电影信息
+    this.getBookList(); //加载首页的电影信息
+    this.getCategoryList();
   },
   mounted() {
     document.onscroll = () => {
@@ -192,48 +185,61 @@ export default {
         if (this.current > this.pages) {
           return;
         }
-        this.getFilmList();
+        this.getBookList();
       }
     },
 
     //搜索
-    searchFilm() {
-      if(this.filmName != '' || this.filmName != null){
-        this.current=1
-        this.filmArray = []
-        this.getFilmList()
+    searchBook() {
+      if (this.bookName != '' || this.bookName != null) {
+        this.current = 1
+        this.bookArray = []
+        this.getBookList()
       }
+    },
+
+
+    //请求获得首页的分类数据
+    getCategoryList() {
+      this.$axios
+        .get('/category/list')
+        .then(response => {
+          this.categoryList = response.data.data.categorylist
+          //查询的结果赋值给categoryList 
+          //将分类信息 缓存存储到本地
+          this.$setLocalStorage('categoryList', this.categoryList)
+        })
     },
 
 
 
 
     //请求获得首页的电影数据
-    getFilmList() {
+    getBookList() {
       this.$axios
         .get("/books/list", {
           params: {
-            name: this.filmName,
+            name: this.bookName,
             current: this.current,
             size: this.size,
           },
         })
         .then((response) => {
-          //console.log(response.data.data.films)
-          //查询的结果赋值给filmArray
+          //console.log(response.data.data.books)
+          //查询的结果赋值给bookArray
           // 查询下一页的数据，需要和现有的数据合并为一个数组
-          // this.filmArray = response.data.data.films.records;
+          // this.bookArray = response.data.data.books.records;
           console.log("response的结果")
           if (response.data.code == 1) {
-              // this.filmArray=[]
-              this.filmArray = this.filmArray.concat(
-                response.data.data.booksList.records
-              );
-              console.log("filmArray",this.filmArray)
-              //分页数据
-              this.current = response.data.data.booksList.current;
-              this.size = response.data.data.booksList.size;
-              this.pages = response.data.data.booksList.pages; //赋值 电影数据 总共多少页
+            // this.bookArray=[]
+            this.bookArray = this.bookArray.concat(
+              response.data.data.booksList.records
+            );
+            console.log("bookArray", this.bookArray)
+            //分页数据
+            this.current = response.data.data.booksList.current;
+            this.size = response.data.data.booksList.size;
+            this.pages = response.data.data.booksList.pages; //赋值 电影数据 总共多少页
           } else {
             this.$message({
               showClose: true,
@@ -245,18 +251,23 @@ export default {
     },
     //设置Type，电影显示的类别
     setType(n) {
-      this.current=1
-      this.filmArray = []
+      this.current = 1
+      this.bookArray = []
       //n就是传递值：0，1，,2
       this.type = n;
       this.typeCss = ["", "", ""];
       this.typeCss[n] = "active";
-      this.getFilmList(); //type类别修改，再次调用电影信息
+      this.getBookList(); //type类别修改，再次调用电影信息
     },
     //点击分类信息图片，跳转至 商家列表组件页面
-    toBusinessList(categoryId) {},
-    toArrangement() {
-      this.$router.push("/arrangement");
+    toBusinessList(categoryId) { },
+    toDetails(bid) {
+      this.$router.push({
+        path: '/details',
+        query: {
+          bid: bid,
+        }
+      });
     },
   },
 };
@@ -270,6 +281,7 @@ export default {
 .wrapper .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
+
 /****************** 总容器 ******************/
 .wrapper {
   width: 100%;
@@ -282,7 +294,6 @@ export default {
   width: 100%;
   height: 10vw;
   background-color: #fff;
-
   display: flex;
   align-items: center;
 }
@@ -302,6 +313,7 @@ export default {
   justify-content: space-between;
   width: 85vw;
 }
+
 .wrapper .header .location-text div {
   display: flex;
   align-items: flex-end;
@@ -310,11 +322,13 @@ export default {
 .wrapper .header .location-text .fa-caret-down {
   margin-left: 1vw;
 }
+
 .wrapper .header .location-text .el-avatar {
   height: 8vw;
   width: 8vw;
   line-height: 8vw;
 }
+
 /****************** search ******************/
 .wrapper .search {
   width: 100%;
@@ -527,6 +541,7 @@ export default {
   justify-content: flex-start;
   padding-bottom: 20vw;
 }
+
 .wrapper .movie li {
   width: 33vw;
   box-sizing: border-box;
@@ -535,21 +550,25 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .wrapper .movie li img {
   width: 28vw;
   height: 40vw;
 }
+
 .wrapper .movie li .movie-info {
   width: 28vw;
   box-sizing: border-box;
   padding-top: 3vw;
 }
+
 .wrapper .movie li .movie-info h3 {
   font-size: 4vw;
   color: #333;
   font-weight: 300;
   margin-bottom: 1vw;
 }
+
 .wrapper .movie li .movie-info .movie-info-node {
   width: 28vw;
 
@@ -558,10 +577,12 @@ export default {
   align-items: center;
   justify-content: space-between;
 }
+
 .wrapper .movie li .movie-info .movie-info-node p {
   font-size: 4vw;
   color: #ffc300;
 }
+
 .wrapper .movie li .movie-info .movie-info-node button {
   border: none;
   border-radius: 1.5vw;

@@ -8,11 +8,11 @@
 
     <li>
       <i class="el-icon-shopping-cart-1" @click="toCompass()"></i>
-      <p>购物车</p>
+      <p>分类</p>
     </li>
     <li @click="toOrderList">
       <i class="el-icon-mobile" @click="toOrderList()"></i>
-      <p>订单</p>
+      <p>喜欢</p>
     </li>
     <li @click="toUserCenter">
       <i class="el-icon-user" @click="toUserCenter()"></i>

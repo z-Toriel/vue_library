@@ -22,7 +22,9 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
+// 设置基础路径
 axios.defaults.baseURL = "http://localhost:10003/"
+// 设置每次请求前都要将token带上
 axios.interceptors.request.use(config =>{
   config.headers['token'] = getSessionStorage('token')
   return config
