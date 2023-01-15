@@ -21,7 +21,7 @@
       <div class="search-fixed-top" ref="fixedBox">
         <!-- 搜索框部分中间的白框 -->
         <div class="search-box">
-          <el-input placeholder="搜索电影名" prefix-icon="el-icon-search" v-model="bookName" @input="searchBook">
+          <el-input placeholder="搜索书名" prefix-icon="el-icon-search" v-model="bookName" @input="searchBook">
           </el-input>
         </div>
       </div>
@@ -96,8 +96,8 @@
         <div class="movie-info">
           <h3>{{ book.name }}</h3>
           <div class="movie-info-node">
-            <p><i class="el-icon-star-on"></i>{{ book.grade }}</p>
-            <button>购票</button>
+            <p> <span>剩余</span> {{ book.remain }}</p>
+            <button>查看</button>
           </div>
         </div>
       </li>
@@ -179,7 +179,7 @@ export default {
       const windowHeight = document.documentElement.clientHeight; //可视区域的高度
       const scrollHeight = document.documentElement.scrollHeight; //滚动条总高度
 
-      if (windowHeight + scrollTop >= scrollHeight) {
+      if (windowHeight + scrollTop >= scrollHeight - 10) {
         this.current++;
         // 如果当前的页码大于总体页数，没有数据，停止请求
         if (this.current > this.pages) {
@@ -567,6 +567,9 @@ export default {
   color: #333;
   font-weight: 300;
   margin-bottom: 1vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
 }
 
 .wrapper .movie li .movie-info .movie-info-node {
@@ -580,7 +583,7 @@ export default {
 
 .wrapper .movie li .movie-info .movie-info-node p {
   font-size: 4vw;
-  color: #ffc300;
+  color: orange;
 }
 
 .wrapper .movie li .movie-info .movie-info-node button {

@@ -8,6 +8,7 @@ import Seat from '@/views/Seat.vue'
 import UserCenter from '@/views/UserCenter.vue'
 import RePassword from '@/views/RePassword.vue'
 import Details from '@/views/details.vue'
+import Category from '@/views/Category.vue'
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,11 @@ const routes = [
     name: 'Details',
     path: '/details',
     component: Details
+  },
+  {
+    name: 'Category',
+    path: '/category',
+    component: Category,
   }
 ]
 

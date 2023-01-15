@@ -28,7 +28,9 @@ export default {
     return {};
   },
   methods: {
-    toCompass() {},
+    toCompass() {
+      this.$router.push("/category")
+    },
     toHome() {
       if (this.$route.path == "/index" || this.$route.path == "/") {
         return;
