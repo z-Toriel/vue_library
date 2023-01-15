@@ -7,8 +7,7 @@
       </div>
       <div class="location-text">
         <div>
-          <i class="el-icon-location-outline"></i>
-          上海浦东蓝村路<i class="fa fa-caret-down"></i>
+          Marek图书馆<i class="fa fa-caret-down"></i>
         </div>
       </div>
     </div>
@@ -26,52 +25,49 @@
         </div>
       </div>
     </div>
+
+    <!-- 轮播图 -->
     <el-carousel :interval="4000" height="44vw" style="margin: 2vw">
-      <el-carousel-item v-for="item in 3" :key="item">
-        <el-image :src="url" :fit="fit"></el-image>
+      <el-carousel-item v-for="item in posterArray" :key="item.id">
+        <el-image :src="item.url" :fit="fit"></el-image>
       </el-carousel-item>
     </el-carousel>
+
     <!-- TODO:电影分类部分 -->
     <ul class="foodtype" id="categoryElement">
       <!-- 循环迭代 categoryList数组，将服务器获得的分类信息，循环显示出来 -->
-      <li>
-        <img src="../assets/dcfl01.png" />
-        <p>战争</p>
+      <li @click="toBooksList(3, '历史')">
+        <h2>历史</h2>
       </li>
-      <li>
-        <img src="../assets/dcfl02.png" />
-        <p>科幻</p>
+      <li @click="toBooksList(9, '政治')">
+        <h2>政治</h2>
       </li>
-      <li>
-        <img src="../assets/dcfl03.png" />
-        <p>爱情</p>
+      <li @click="toBooksList(2, '文学作品')">
+        <h2>文学</h2>
       </li>
-      <li>
-        <img src="../assets/dcfl04.png" />
-        <p>惊悚</p>
+      <li @click="toBooksList(10, '军事')">
+        <h2>军事</h2>
       </li>
-      <li>
-        <img src="../assets/dcfl05.png" />
-        <p>动画</p>
+      <li @click="toBooksList(1, '世界名著')">
+        <h2>名著</h2>
       </li>
     </ul>
     <!-- 电影分类部分End -->
 
     <!-- 横幅广告部分（注意：此处有背景图片） -->
     <div class="banner">
-      <h3>欢乐电影节</h3>
-      <p>每周一日，欢乐电影节</p>
-      <a>立即抢购 &gt;</a>
+      <h3>欢乐读书节</h3>
+      <p>每周一日，欢乐读书节</p>
+      <a>立即参加 &gt;</a>
     </div>
 
     <!-- 超级会员部分 -->
     <div class="supermember">
       <div class="left">
         <img src="../assets/super_member.png" />
-        <h3>超级会员</h3>
-        <p>&#8226; 每月享超值权益</p>
+        <h3>还未注册？</h3>
       </div>
-      <div class="right">立即开通 &gt;</div>
+      <div class="right" @click="$router.push('/register')">立即注册 &gt;</div>
     </div>
 
     <!-- 推荐商家部分 -->
@@ -80,15 +76,6 @@
       <p>推荐商家</p>
       <div class="recommend-line"></div>
     </div> -->
-
-    <!-- 推荐方式部分 -->
-    <ul class="recommendtype">
-      <li @click="setType(0)" :class="typeCss[0]">
-        全部电影<i class="fa fa-caret-down"></i>
-      </li>
-      <li @click="setType(1)" :class="typeCss[1]">正在热映</li>
-      <li @click="setType(2)" :class="typeCss[2]">即将上映</li>
-    </ul>
 
     <ul class="movie">
       <li @click="toDetails(book.id)" v-for="(book, index) in bookArray" :key="index">
@@ -117,6 +104,7 @@ export default {
   data: function () {
     return {
       fans: {},
+      posterArray: [], // 用于存放轮播图
       url: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.2008php.com%2F2012_Website_appreciate%2F2012-09-03%2F20120903102615.jpg&refer=http%3A%2F%2Fwww.2008php.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1672750160&t=bb40f9a456244b15efa0b2e45eb9b460",
       fit: "cover",
       //定义一个分类信息的数组，存储所有的分类信息
@@ -137,7 +125,8 @@ export default {
   created() {
     this.fans = this.$getSessionStorage("fans");
     this.getBookList(); //加载首页的电影信息
-    this.getCategoryList();
+    // this.getCategoryList();
+    this.getPosterList();
   },
   mounted() {
     document.onscroll = () => {
@@ -187,6 +176,17 @@ export default {
         }
         this.getBookList();
       }
+    },
+
+    //请求获取首页的幻灯片数据===========
+    getPosterList() {
+      //请求服务器端  
+      this.$axios.get('/poster/list')
+        .then(response => {
+          console.log(response)
+          this.posterArray = response.data.data.posterList //获得分类数组 this.tableData
+        })
+      // this.$router.go(0);
     },
 
     //搜索
@@ -260,7 +260,15 @@ export default {
       this.getBookList(); //type类别修改，再次调用电影信息
     },
     //点击分类信息图片，跳转至 商家列表组件页面
-    toBusinessList(categoryId) { },
+    toBooksList(categoryId, categoryName) {
+      this.$router.push({
+        path: '/booksList',
+        query: {
+          categoryId: categoryId,
+          categoryName: categoryName,
+        }
+      })
+    },
     toDetails(bid) {
       this.$router.push({
         path: '/details',
@@ -421,7 +429,7 @@ export default {
 
   box-sizing: border-box;
   padding: 2vw 6vw;
-  color: #fff;
+  color: #000;
 }
 
 .wrapper .banner h3 {
@@ -431,13 +439,13 @@ export default {
 
 .wrapper .banner p {
   font-size: 3.4vw;
-  color: #fff;
+  color: #000;
   margin-bottom: 2.4vw;
 }
 
 .wrapper .banner a {
   font-size: 3vw;
-  color: #c79060;
+  color: red;
   font-weight: 700;
 }
 
@@ -569,7 +577,7 @@ export default {
   margin-bottom: 1vw;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space:nowrap;
+  white-space: nowrap;
 }
 
 .wrapper .movie li .movie-info .movie-info-node {
