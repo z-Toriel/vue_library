@@ -9,6 +9,7 @@ import UserCenter from '@/views/UserCenter.vue'
 import RePassword from '@/views/RePassword.vue'
 import Details from '@/views/details.vue'
 import Category from '@/views/Category.vue'
+import BooksList from '@/views/BooksList.vue'
 
 Vue.use(VueRouter)
 
@@ -57,6 +58,11 @@ const routes = [
     name: 'Category',
     path: '/category',
     component: Category,
+  },
+  {
+    name: 'BooksList',
+    path: '/booksList',
+    component: BooksList,
   }
 ]
 

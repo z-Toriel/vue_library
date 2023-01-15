@@ -1,14 +1,9 @@
 <template>
   <div class="wrapper">
-    <!-- 头部分 -->
-    <header>
-      <div class="left"> <i @click="$router.back()" class="el-icon-back"></i> </div>
-      <div class="right">分类</div>
-    </header>
-
+    <Header></Header>
     <!-- 主要部分 -->
     <div class="main">
-      <div class="category" v-for="(item,index) in categoryList">
+      <div @click="toBooksList(item.id,item.name)" class="category" v-for="(item,index) in categoryList">
         <div class="category-item">
           <div><h2>{{item.name}}</h2></div>
           <div class="booksNumber">{{item.booksNumber}}本书籍</div>
@@ -22,6 +17,7 @@
 
 <script>
 import Footer from "../components/Footer.vue";
+import Header from "../components/Header.vue"
 export default {
   data(){
     return {
@@ -38,31 +34,28 @@ export default {
         console.log("categoryList:",response.data.data)
         this.categoryList = response.data.data.categorylist
       })
+    },
+
+    // 跳转到booksList，顺便带上该分类的名称和id
+    toBooksList(categoryId,categoryName){
+      this.$router.push({
+        path: '/booksList',
+        query: {
+          categoryId: categoryId,
+          categoryName: categoryName,
+        }
+      })
     }
   },
   components:{
     Footer,
+    Header,
   }
 }
 </script>
 
 <style scoped>
-/* 头部份开始 */
-.wrapper header{
-  justify-content: space-between;
-}
 
-.wrapper header .left{
-  width: 10vw;
-  text-align: center;
-}
-
-.wrapper header .right{
-  flex:1;
-  text-align: center;
-  padding-right: 10vw;
-}
-/* 头部份结束 */
 
 /* 主要部份开始 */
 .wrapper .main{

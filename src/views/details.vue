@@ -10,7 +10,7 @@
         <img :src="filmdata.cover">
       </div>
       <div class="header-list">
-        <p style="height:20px">{{ filmdata.name }}</p>
+        <div class="bookName">{{ filmdata.name }}</div>
         <span style="height:5px">作者：{{ filmdata.author }}</span>
         <ul>
           <li>{{ filmdata.categoryName }}</li>
@@ -18,11 +18,6 @@
           <li>{{ filmdata.region }}</li>
           <li>
             <h3>剩余：{{ filmdata.remain }}</h3>
-          </li>
-          <li>
-            <el-button size="mini" type="primary" plain @click="tolove()"><i class="el-icon-favorites-fill"></i>
-              想看</el-button>
-            <el-button size="mini" type="danger" plain><i class="el-icon-star-on"></i> 看过</el-button>
           </li>
         </ul>
       </div>
@@ -122,7 +117,7 @@
       <br>
     </div>
 
-    <Footer></Footer>
+    <!-- <Footer></Footer> -->
   </div>
 </template>
   
@@ -362,7 +357,7 @@ export default {
 
 .wrapper .header-logo {
   width: 100%;
-  height: 58vw;
+  /* height: 58vw; */
   /*使用上外边距避开header部分*/
   margin-top: 12vw;
 
@@ -381,9 +376,12 @@ export default {
   height: 48vw;
 }
 
-.wrapper .header-logo .header-list p {
+.wrapper .header-logo .header-list .bookName {
   font-size: 6vw;
-  margin-bottom: 5vw;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* white-space: nowrap; */
 }
 
 .wrapper .header-logo .header-list span {
