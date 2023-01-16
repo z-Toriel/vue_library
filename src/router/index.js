@@ -11,6 +11,10 @@ import Details from '@/views/details.vue'
 import Category from '@/views/Category.vue'
 import BooksList from '@/views/BooksList.vue'
 import AuthorList from '@/views/AuthorList.vue'
+import BorrowList from '@/views/BorrowList.vue'
+import EvaluateList from '@/views/EvaluateList.vue'
+import UserInfo from '@/views/UserInfo.vue'
+import EdituserInfo from '@/views/EdituserInfo.vue'
 
 Vue.use(VueRouter)
 
@@ -69,6 +73,26 @@ const routes = [
     name: 'AuthorList',
     path: '/authorList',
     component: AuthorList,
+  },
+  {
+    name: 'BorrowList',
+    path: '/borrowList',
+    component: BorrowList,
+  },
+  {
+    name: 'EvaluateList',
+    path: '/evaluateList',
+    component: EvaluateList,
+  },
+  {
+    name: 'UserInfo',
+    path: '/userInfo',
+    component: UserInfo,
+  },
+  {
+    name: 'EdituserInfo',
+    path: '/edituserInfo',
+    component: EdituserInfo,
   }
 ]
 

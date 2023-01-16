@@ -153,19 +153,6 @@ export default {
     this.fans = this.$getSessionStorage('fans')
   },
   methods: {
-
-    //点击电影信息跳转到排片信息
-    toArrangement(id) {
-      //fid就是电影信息
-      this.$router.push({
-        path: '/arrangement',
-        //携带参数
-        query: {
-          fid: id,
-        }
-      })
-    },
-
     // 获得电影信息
     // 根据电影fid获得电影的详情信息
     getFilm() {
