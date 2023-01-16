@@ -1,9 +1,10 @@
 <template>
   <div class="wrapper">
     <!-- header部分 -->
-    <header>
+    <!-- <header>
       <h1 style="margin-top: 100px; text-algin: center">修改密码</h1>
-    </header>
+    </header> -->
+    <Header title="修改密码"></Header>
 
     <div class="cal">
       <!-- 表单部分 -->
@@ -72,12 +73,13 @@
     </div>
 
     <!-- 底部菜单部分 -->
-    <Footer></Footer>
+    <!-- <Footer></Footer> -->
   </div>
 </template>
 
 <script>
 import Footer from "../components/Footer.vue";
+import Header from "../components/Header.vue";
 
 export default {
   name: "Register",
@@ -191,6 +193,7 @@ export default {
   },
   components: {
     Footer,
+    Header,
   },
 };
 </script>

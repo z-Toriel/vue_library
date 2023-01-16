@@ -9,34 +9,52 @@
     <div class="my-order">
       <div class="order">
         <div class="order-item">
-          <div class="order-item-img">222</div>
-          <div class="order-item-info">订单数量</div>
+          <div class="order-item-img">{{borrowNum}}</div>
+          <div class="order-item-info">借阅数量</div>
         </div>
         <div class="order-item">
-          <div class="order-item-img">222</div>
-          <div class="order-item-info">想看数量</div>
+          <div class="order-item-img">{{returnBooksNum}}</div>
+          <div class="order-item-info">本书待还</div>
         </div>
         <div class="order-item">
-          <div class="order-item-img">222</div>
+          <div class="order-item-img">{{booksEvaluateNum}}</div>
           <div class="order-item-info">评论数量</div>
         </div>
       </div>
     </div>
     <div class="jump">
-      <router-link to="/orderList">
+      <router-link to="/borrowList">
         <div class="serve">
           <div class="serve-item">
             <i class="el-icon-s-order"></i>
-            <span>我的订单</span>
+            <span>历史借阅</span>
           </div>
         </div>
       </router-link>
 
-      <router-link to="/love">
+      <router-link to="/evaluateList">
         <div class="serve">
           <div class="serve-item">
-            <i class="el-icon-film"></i>
-            <span>想看的电影</span>
+            <i class="el-icon-s-comment"></i>
+            <span>我的评论</span>
+          </div>
+        </div>
+      </router-link>
+
+      <router-link to="/userInfo">
+        <div class="serve">
+          <div class="serve-item">
+            <i class="el-icon-s-custom"></i>
+            <span>查看个人信息</span>
+          </div>
+        </div>
+      </router-link>
+
+      <router-link to="/editUserInfo">
+        <div class="serve">
+          <div class="serve-item">
+            <i class="el-icon-edit"></i>
+            <span>修改个人信息</span>
           </div>
         </div>
       </router-link>
@@ -44,7 +62,7 @@
       <router-link to="/rePassword">
         <div class="serve">
           <div class="serve-item">
-            <i class="el-icon-question"></i>
+            <i class="el-icon-edit-outline"></i>
             <span>修改密码</span>
           </div>
         </div>
@@ -52,7 +70,7 @@
 
       <div class="serve" @click="logout">
         <div class="serve-item">
-          <i class="el-icon-s-custom"></i>
+          <i class="el-icon-close"></i>
           <span>退出登录</span>
         </div>
       </div>
@@ -67,28 +85,32 @@ export default {
   data() {
     return {
       fans: this.$getSessionStorage("fans"),
-      ordersNum: 0, //用于存放订单数量
-      loveNum: 0, // 想看的数量
-      evaluateNum: 0,
+      borrowNum: 0, // 用于存放借阅
+      booksEvaluateNum: 0, // 评论的数量
+      returnBooksNum: 0,  // 待还书的数量
     };
   },
   created() {
-    // this.getNum()
+    this.getNum()
   },
   methods: {
-    // getNum(){
-    //   this.$axios.get("/orders/num/"+this.fans.id).then((response)=>{
-    //     this.ordersNum = response.data.data.ordernum
-    //     console.log(response.data)
-    //   })
-    //   this.$axios.get("/love/num/"+this.fans.id).then((response)=>{
-    //     this.loveNum = response.data.data.lovenum
-    //     console.log(response.data)
-    //   })
-    //   this.$axios.get("/evaluate/num/"+this.fans.id).then((response)=>{
-    //     this.evaluateNum = response.data.data.evaluatenum
-    //   })
-    // }
+    getNum(){
+      // 获取历史借阅数量
+      this.$axios.get("/borrow/num/"+this.fans.id).then((response)=>{
+        this.borrowNum = response.data.data.borrowNum
+        console.log(response.data)
+      })
+      // 获取评论数量
+      this.$axios.get("/evaluate/num/"+this.fans.id).then((response)=>{
+        this.booksEvaluateNum = response.data.data.booksEvaluateNum
+        console.log(response.data)
+      })
+
+      this.$axios.get("/borrow/returnBooksNum/"+this.fans.id).then((response)=>{
+        this.returnBooksNum = response.data.data.returnBooksNum
+        console.log(response.data)
+      })
+    },
     logout(){
       this.$router.push("/")
       this.$removeSessionStorage('fans')
