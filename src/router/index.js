@@ -10,6 +10,7 @@ import RePassword from '@/views/RePassword.vue'
 import Details from '@/views/details.vue'
 import Category from '@/views/Category.vue'
 import BooksList from '@/views/BooksList.vue'
+import AuthorList from '@/views/AuthorList.vue'
 
 Vue.use(VueRouter)
 
@@ -63,6 +64,11 @@ const routes = [
     name: 'BooksList',
     path: '/booksList',
     component: BooksList,
+  },
+  {
+    name: 'AuthorList',
+    path: '/authorList',
+    component: AuthorList,
   }
 ]
 

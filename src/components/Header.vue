@@ -3,7 +3,7 @@
     <!-- 头部分 -->
     <header>
       <div class="left"> <i @click="$router.back()" class="el-icon-back"></i> </div>
-      <div class="right">{{ title }}分类</div>
+      <div class="right">{{ title }}</div>
     </header>
   </div>
 </template>

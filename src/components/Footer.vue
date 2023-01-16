@@ -10,9 +10,9 @@
       <i class="el-icon-shopping-cart-1" @click="toCompass()"></i>
       <p>分类</p>
     </li>
-    <li @click="toOrderList">
-      <i class="el-icon-mobile" @click="toOrderList()"></i>
-      <p>喜欢</p>
+    <li @click="toAuthorList">
+      <i class="el-icon-mobile" @click="toAuthorList()"></i>
+      <p>作者</p>
     </li>
     <li @click="toUserCenter">
       <i class="el-icon-user" @click="toUserCenter()"></i>
@@ -37,15 +37,15 @@ export default {
       }
       this.$router.push("/index");
     },
-    toOrderList() {
+    toAuthorList() {
       /*
                                         $router：路由操作对象，只写。 需要对路由进行操作时候设置，例如路由跳转。
                                         $route: 路由信息对象，只读。 获取路由相关信息。 例如获取路由传递参数、或获得当前路由地址
                                                    */
-      if (this.$route.path == "/orderList") {
+      if (this.$route.path == "/authorList") {
         return;
       }
-      this.$router.push("/orderList");
+      this.$router.push("/authorList");
     },
     toUserCenter() {
       this.$router.push("/userCenter")

@@ -36,16 +36,7 @@
           <el-progress :percentage="2" color="orange" :format="format"></el-progress>
         </li>
       </ul>
-
-
     </div>
-    <div class="BtnDiv">
-      <el-button type="primary" class="btn" @click="toArrangement(filmdata.id)">点击购票</el-button>
-    </div>
-    <ul class="arrangement_time">
-      <li class="active">简介</li>
-      <li>影评</li>
-    </ul>
 
     <div class="sessions">
       <ul>
@@ -98,7 +89,7 @@
       <ul class="commet">
         <li>
           <el-avatar :size="60" :src="fans.avatar"></el-avatar>
-          <p class="wrt">写影评</p>
+          <p class="wrt">写评论</p>
           <p class="shing"><el-rate v-model="evaobj.star" :colors="colors">
             </el-rate></p>
 
@@ -235,7 +226,7 @@ export default {
       this.$axios.get('/evaluate/save/', {
         params: {
           uid: this.fans.id,
-          fid: this.filmdata.id,
+          bid: this.filmdata.id,
           comment: this.evaobj.comment,
           star: this.evaobj.star
         },
