@@ -23,7 +23,8 @@
         <div class="content">
           <input type="email" v-model="fans.email" placeholder="输入邮箱" />
         </div>
-        <button @click="getCheckCode()">获取验证码</button>
+        <button @click="getCheckCode()" v-if="isgetCheckCode">获取验证码</button>
+        <span v-if="!isgetCheckCode">{{countdown}}秒后重新获取</span>
       </li>
       <li>
         <div class="title">验证码：</div>
@@ -129,6 +130,8 @@ export default {
       checkCode: "", // 用于存放服务端传过来的验证码
       userCheckCode: "", // 用于保存用户输入的验证码
       isCheckCode: false,
+      isgetCheckCode: true, // 用于 “获取验证码” 按钮 是否显示
+      countdown:30,
     };
   },
   methods: {
@@ -187,6 +190,10 @@ export default {
               showClose: true,
               message: "验证码发送成功",
               type: "success",
+              onClose: () => {
+                this.countdownFunction()  // 调用下面的倒计时函数
+                this.isgetCheckCode = false
+              }
             });
           } else {
             this.$message({
@@ -196,6 +203,20 @@ export default {
             });
           }
         });
+    },
+
+    countdownFunction(){
+      // 一秒执行一次
+      let int = setInterval(() => {
+        this.countdown--  
+      }, 1000);
+
+      // 30秒后执行该函数
+      setTimeout(() => {
+        window.clearInterval(int) // 关闭倒计时
+        this.isgetCheckCode = true  // 重置
+        this.countdown = 30
+      }, 30000);
     },
 
     // 判断用户输入的验证码是否正确
